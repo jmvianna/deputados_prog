@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import streamlit.components.v1 as components
+from urllib.parse import quote
 
 df = pd.read_csv("deputados_2022.csv")
 
@@ -14,13 +15,14 @@ if "partido" in params:
     st.subheader(f"deputados do {partido}")
 
     deputados = df[df["partido"] == partido].copy()
-    deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
     deputados = deputados.sort_values("nome").reset_index(drop=True)
-
-    deputados.columns = ["nome", "nome civil", "partido", "estado", "sexo"]
     deputados.index = deputados.index + 1
 
-    st.dataframe(deputados, use_container_width=True)
+    deputados["id"] = deputados["id"].apply(
+        lambda x: f'<a href="https://www.camara.leg.br/deputados/{x}" target="_blank">{x}</a>'
+    )
+
+    st.markdown(deputados.to_html(escape=False), unsafe_allow_html=True)
 
     st.markdown("[← voltar](./)")
 
@@ -30,13 +32,14 @@ elif "estado" in params:
     st.subheader(f"deputados de {estado}")
 
     deputados = df[df["uf"] == estado].copy()
-    deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
     deputados = deputados.sort_values("nome").reset_index(drop=True)
-
-    deputados.columns = ["nome", "nome civil", "partido", "estado", "sexo"]
     deputados.index = deputados.index + 1
 
-    st.dataframe(deputados, use_container_width=True)
+    deputados["id"] = deputados["id"].apply(
+        lambda x: f'<a href="https://www.camara.leg.br/deputados/{x}" target="_blank">{x}</a>'
+    )
+
+    st.markdown(deputados.to_html(escape=False), unsafe_allow_html=True)
 
     st.markdown("[← voltar](./)")
 
@@ -64,10 +67,11 @@ else:
             partido = linha["partido"]
             qtd = linha["quantidade"]
             largura = (qtd / max_qtd) * 100
+            link = quote(str(partido))
 
             html += f"""
             <div style="margin-bottom: 20px; font-family: sans-serif;">
-                <a href="?partido={partido}" target="_top" style="font-weight: bold; font-size: 18px;">
+                <a href="?partido={link}" target="_parent" style="font-weight: bold; font-size: 18px;">
                     {partido}
                 </a>
                 <span style="margin-left: 8px; font-size: 16px;">{qtd} candidatos</span>
@@ -94,10 +98,11 @@ else:
             estado = linha["estado"]
             qtd = linha["quantidade"]
             largura = (qtd / max_qtd) * 100
+            link = quote(str(estado))
 
             html += f"""
             <div style="margin-bottom: 20px; font-family: sans-serif;">
-                <a href="?estado={estado}" target="_top" style="font-weight: bold; font-size: 18px;">
+                <a href="?estado={link}" target="_parent" style="font-weight: bold; font-size: 18px;">
                     {estado}
                 </a>
                 <span style="margin-left: 8px; font-size: 16px;">{qtd} candidatos</span>
