@@ -3,27 +3,50 @@ import pandas as pd
 
 df = pd.read_csv("deputados_2022.csv")
 
-st.title("análise dos deputados, 2022")
+st.title("análise dos Deputados 2022")
 
-pergunta = st.selectbox(
-    "escolha uma pergunta:",
-    ["selecione uma opção", "estados com mais candidatos", "partidos com mais candidatos"]
-)
+params = st.query_params
 
-if pergunta != "selecione uma opção":
+if "partido" in params:
+    partido = params["partido"]
 
-    if pergunta == "estados com mais candidatos":
-        st.subheader("estados com mais candidatos")
+    st.subheader(f"deputados do {partido}")
 
-        resultado = df["uf"].value_counts().reset_index()
-        resultado.columns = ["estado", "quantidade de candidatos"]
+    deputados = df[df["partido"] == partido]["nome"].sort_values()
 
-        st.dataframe(resultado)
+    for deputado in deputados:
+        st.write(f"- {deputado}")
 
-    elif pergunta == "partidos com mais candidatos":
+    st.markdown("[← voltar para partidos](./)")
+
+else:
+    pergunta = st.selectbox(
+        "escolha uma pergunta:",
+        [
+            "selecione uma opção",
+            "partidos com mais candidatos",
+            "estados com mais candidatos"
+        ]
+    )
+
+    if pergunta == "partidos com mais candidatos":
         st.subheader("partidos com mais candidatos")
 
         resultado = df["partido"].value_counts().reset_index()
         resultado.columns = ["partido", "quantidade de candidatos"]
+        resultado.index = resultado.index + 1
+
+        for _, linha in resultado.iterrows():
+            partido = linha["partido"]
+            qtd = linha["quantidade de candidatos"]
+
+            st.markdown(f"[{partido}](?partido={partido}) — {qtd} candidatos")
+
+    elif pergunta == "estados com mais candidatos":
+        st.subheader("estados com mais candidatos")
+
+        resultado = df["uf"].value_counts().reset_index()
+        resultado.columns = ["estado", "quantidade de candidatos"]
+        resultado.index = resultado.index + 1
 
         st.dataframe(resultado)
