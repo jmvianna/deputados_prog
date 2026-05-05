@@ -10,7 +10,7 @@ params = st.query_params
 if "partido" in params:
     partido = params["partido"]
 
-    st.subheader(f"Deputados do {partido}")
+    st.subheader(f"deputados do {partido}")
 
     deputados = df[df["partido"] == partido].copy()
     deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
@@ -53,19 +53,19 @@ else:
     )
 
     # GRÁFICO DE PARTIDOS
-   if pergunta == "Partidos com mais candidatos":
-    st.subheader("Partidos com mais candidatos")
+   if pergunta == "partidos com mais candidatos":
+    st.subheader("partidos com mais candidatos")
 
     resultado = df["partido"].value_counts().reset_index()
-    resultado.columns = ["Partido", "Quantidade"]
+    resultado.columns = ["partido", "quantidade"]
 
-    max_qtd = resultado["Quantidade"].max()
+    max_qtd = resultado["quantidade"].max()
 
     html = ""
 
     for _, linha in resultado.iterrows():
-        partido = linha["Partido"]
-        qtd = linha["Quantidade"]
+        partido = linha["partido"]
+        qtd = linha["quantidade"]
         largura = (qtd / max_qtd) * 100
 
         html += f"""
