@@ -48,23 +48,40 @@ else:
             "estados com mais candidatos"
         ]
     )
+if pergunta == "Partidos com mais candidatos":
+    st.subheader("Partidos com mais candidatos")
 
-    if pergunta == "partidos com mais candidatos":
-        st.subheader("partidos com mais candidatos")
+    resultado = df["partido"].value_counts().reset_index()
+    resultado.columns = ["Partido", "Quantidade de candidatos"]
 
-        resultado = df["partido"].value_counts().reset_index()
-        resultado.columns = ["partido", "quantidade de candidatos"]
-        resultado.index = resultado.index + 1
+    max_qtd = resultado["Quantidade de candidatos"].max()
 
-        tabela_html = resultado.to_html(escape=False)
+    html = ""
 
-        for partido in resultado["partido"]:
-            tabela_html = tabela_html.replace(
-                f"<td>{partido}</td>",
-                f'<td><a href="?partido={partido}">{partido}</a></td>'
-            )
+    for _, linha in resultado.iterrows():
+        partido = linha["Partido"]
+        qtd = linha["Quantidade de candidatos"]
+        largura = (qtd / max_qtd) * 100
 
-        st.markdown(tabela_html, unsafe_allow_html=True)
+        html += f"""
+        <div style="margin-bottom: 18px;">
+            <a href="?partido={partido}" style="font-weight: bold; font-size: 18px;">
+                {partido}
+            </a>
+            <span style="margin-left: 8px;">{qtd} candidatos</span>
+
+            <div style="background-color: #eeeeee; border-radius: 8px; height: 24px; margin-top: 6px;">
+                <div style="
+                    background-color: #4A90E2;
+                    width: {largura}%;
+                    height: 24px;
+                    border-radius: 8px;">
+                </div>
+            </div>
+        </div>
+        """
+
+    st.markdown(html, unsafe_allow_html=True)
 
     elif pergunta == "estados com mais candidatos":
         st.subheader("estados com mais candidatos")
