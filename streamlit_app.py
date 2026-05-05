@@ -13,7 +13,22 @@ if "partido" in params:
     st.subheader(f"deputados do {partido}")
 
     deputados = df[df["partido"] == partido].copy()
+    deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
+    deputados.columns = ["nome", "nome civil", "partido", "estado", "sexo"]
 
+    deputados = deputados.sort_values("Nome").reset_index(drop=True)
+    deputados.index = deputados.index + 1
+
+    st.dataframe(deputados, use_container_width=True)
+
+    st.markdown("[← Voltar](./)")
+
+elif "estado" in params:
+    estado = params["estado"]
+
+    st.subheader(f"deputados de {estado}")
+
+    deputados = df[df["uf"] == estado].copy()
     deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
     deputados.columns = ["nome", "nome civil", "partido", "estado", "sexo"]
 
@@ -26,7 +41,7 @@ if "partido" in params:
 
 else:
     pergunta = st.selectbox(
-        "escolha uma opção:",
+        "escolha uma pergunta:",
         [
             "selecione uma opção",
             "partidos com mais candidatos",
@@ -58,4 +73,12 @@ else:
         resultado.columns = ["estado", "quantidade de candidatos"]
         resultado.index = resultado.index + 1
 
-        st.dataframe(resultado, use_container_width=True)
+        tabela_html = resultado.to_html(escape=False)
+
+        for estado in resultado["estado"]:
+            tabela_html = tabela_html.replace(
+                f"<td>{estado}</td>",
+                f'<td><a href="?estado={estado}">{estado}</a></td>'
+            )
+
+        st.markdown(tabela_html, unsafe_allow_html=True)
