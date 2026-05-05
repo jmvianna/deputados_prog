@@ -16,12 +16,12 @@ if "partido" in params:
     deputados = deputados[["nome", "nome_civil", "partido", "uf", "sexo"]]
     deputados.columns = ["nome", "nome civil", "partido", "estado", "sexo"]
 
-    deputados = deputados.sort_values("Nome").reset_index(drop=True)
+    deputados = deputados.sort_values("nome").reset_index(drop=True)
     deputados.index = deputados.index + 1
 
     st.dataframe(deputados, use_container_width=True)
 
-    st.markdown("[← Voltar](./)")
+    st.markdown("[← voltar](./)")
 
 elif "estado" in params:
     estado = params["estado"]
