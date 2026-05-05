@@ -53,40 +53,39 @@ else:
     )
 
     # GRÁFICO DE PARTIDOS
-    if pergunta == "partidos com mais candidatos":
-        st.subheader("partidos com mais candidatos")
+   if pergunta == "Partidos com mais candidatos":
+    st.subheader("Partidos com mais candidatos")
 
-        resultado = df["partido"].value_counts().reset_index()
-        resultado.columns = ["partido", "quantidade"]
+    resultado = df["partido"].value_counts().reset_index()
+    resultado.columns = ["Partido", "Quantidade"]
 
-        max_qtd = resultado["quantidade"].max()
+    max_qtd = resultado["Quantidade"].max()
 
-        html = ""
+    html = ""
 
-        for _, linha in resultado.iterrows():
-            partido = linha["partido"]
-            qtd = linha["quantidade"]
-            largura = (qtd / max_qtd) * 100
+    for _, linha in resultado.iterrows():
+        partido = linha["Partido"]
+        qtd = linha["Quantidade"]
+        largura = (qtd / max_qtd) * 100
 
-            html += f"""
-            <div style="margin-bottom: 18px;">
-                <a href="?partido={partido}" style="font-weight: bold; font-size: 18px;">
-                    {partido}
-                </a>
-                <span style="margin-left: 8px;">{qtd} candidatos</span>
+        html += f"""
+<div style="margin-bottom: 18px;">
+    <a href="?partido={partido}" style="font-weight: bold; font-size: 18px;">
+        {partido}
+    </a>
+    <span style="margin-left: 8px;">{qtd} candidatos</span>
 
-                <div style="background-color: #eeeeee; border-radius: 8px; height: 24px; margin-top: 6px;">
-                    <div style="
-                        background-color: #4A90E2;
-                        width: {largura}%;
-                        height: 24px;
-                        border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-            """
-
-        st.markdown(html, unsafe_allow_html=True)
+    <div style="background-color: #eeeeee; border-radius: 8px; height: 24px; margin-top: 6px;">
+        <div style="
+            background-color: #4A90E2;
+            width: {largura}%;
+            height: 24px;
+            border-radius: 8px;">
+        </div>
+    </div>
+</div>
+"""
+    st.markdown(html, unsafe_allow_html=True)
 
     # GRÁFICO DE ESTADOS
     elif pergunta == "estados com mais candidatos":
