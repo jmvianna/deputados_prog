@@ -29,7 +29,7 @@ else:
         "escolha uma opção:",
         [
             "selecione uma opção",
-            "sartidos com mais candidatos",
+            "partidos com mais candidatos",
             "estados com mais candidatos"
         ]
     )
