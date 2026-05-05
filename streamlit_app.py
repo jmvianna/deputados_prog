@@ -12,16 +12,22 @@ if "partido" in params:
 
     st.subheader(f"deputados do {partido}")
 
-    deputados = df[df["partido"] == partido]["nome"].sort_values()
+    deputados = df[df["partido"] == partido].copy()
 
-    for deputado in deputados:
-        st.write(f"- {deputado}")
+    deputados = deputados[["nome", "nome_civil", "uf", "sexo"]]
+    deputados.columns = ["nome", "nome civil", "estado", "sexo"]
 
-    st.markdown("[← voltar para partidos](./)")
+    deputados = deputados.sort_values("nome").reset_index(drop=True)
+    deputados.index = deputados.index + 1
+
+    # DataFrame bonito
+    st.dataframe(deputados, use_container_width=True)
+
+    st.markdown("[← Voltar](./)")
 
 else:
     pergunta = st.selectbox(
-        "escolha uma pergunta:",
+        "escolha uma opção:",
         [
             "selecione uma opção",
             "partidos com mais candidatos",
@@ -40,7 +46,7 @@ else:
             partido = linha["partido"]
             qtd = linha["quantidade de candidatos"]
 
-            st.markdown(f"[{partido}](?partido={partido}) — {qtd} candidatos")
+            st.markdown(f"**[{partido}](?partido={partido})** — {qtd} candidatos")
 
     elif pergunta == "estados com mais candidatos":
         st.subheader("estados com mais candidatos")
@@ -49,4 +55,4 @@ else:
         resultado.columns = ["estado", "quantidade de candidatos"]
         resultado.index = resultado.index + 1
 
-        st.dataframe(resultado)
+        st.dataframe(resultado, use_container_width=True)
